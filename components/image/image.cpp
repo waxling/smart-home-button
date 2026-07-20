@@ -105,7 +105,9 @@ Color Image::get_pixel(int x, int y, const Color color_on, const Color color_off
   }
 }
 #ifdef USE_LVGL
-lv_img_dsc_t *Image::get_lv_img_dsc() {
+lv_img_dsc_t *Image::get_lv_img_dsc() { return this->get_lv_image_dsc(); }
+
+lv_img_dsc_t *Image::get_lv_image_dsc() {
   // lazily construct lvgl image_dsc.
   if (this->dsc_.data != this->data_start_) {
     this->dsc_.data = this->data_start_;

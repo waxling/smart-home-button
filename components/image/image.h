@@ -42,6 +42,7 @@ class Image : public display::BaseImage {
 
 #ifdef USE_LVGL
   lv_img_dsc_t *get_lv_img_dsc();
+  lv_img_dsc_t *get_lv_image_dsc();
 #endif
  protected:
   bool get_binary_pixel_(int x, int y) const;
