@@ -20,6 +20,7 @@ substitutions:
   api_encryption_key: "MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA="
   ota_password: "change-me-ota-password"
   smart_home_button_ref: main
+  smart_home_button_refresh: 1d
   asset_base_url: https://raw.githubusercontent.com/waxling/smart-home-button/${smart_home_button_ref}/
 
 external_components:
@@ -29,7 +30,7 @@ external_components:
       ref: ${smart_home_button_ref}
       path: components
     components: [image, generic_image, media_source, sendspin]
-    refresh: 1d
+    refresh: ${smart_home_button_refresh}
 
 esphome:
   name: ${device_name}

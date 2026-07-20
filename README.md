@@ -166,9 +166,12 @@ packages:
   smart_home_button:
     url: https://github.com/waxling/smart-home-button
     ref: codex/haos-espbuilder-package
-    file: packages/haos-espbuilder.yaml
-    vars:
-      smart_home_button_ref: codex/haos-espbuilder-package
+    refresh: 0s
+    files:
+      - path: packages/haos-espbuilder.yaml
+        vars:
+          smart_home_button_ref: codex/haos-espbuilder-package
+          smart_home_button_refresh: 0s
 ```
 
 ## Notes about the music page
