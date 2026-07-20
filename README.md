@@ -75,6 +75,7 @@ m5dial-smart-button/
 |-- secrets.example.yaml         # Copy this to secrets.yaml
 |-- requirements.txt             # ESPHome version used for this project
 |-- THIRD_PARTY_NOTICES.md        # Third-party code/font/icon notes
+|-- packages/                     # Remote ESPHome package entry points
 |-- src/
 |   |-- main/
 |   |   |-- hardware.yaml        # M5Dial pins, display, touch, RTC, power hold
@@ -149,6 +150,16 @@ For later OTA updates:
 ```bash
 esphome upload dial.yaml
 ```
+
+## HAOS ESP Builder
+
+If you build from Home Assistant OS with ESPHome Builder, use the remote package instead of copying the whole repository into `/config/esphome`.
+
+Create a new ESPHome device YAML using `examples/haos-espbuilder.yaml` as the starting point. Keep your Wi-Fi, API, and OTA values in ESPHome Builder's `secrets.yaml`, then update the entity vars in the package block.
+
+The HAOS package is `packages/haos-espbuilder.yaml`. It avoids direct `!secret` lookups so it can be loaded as a remote Git package, and it points `external_components` at this GitHub repository so the SendSpin and media/image components are available during the HAOS build.
+
+For testing changes from a branch or tag, change the package `ref` in your local ESPHome Builder YAML.
 
 ## Notes about the music page
 

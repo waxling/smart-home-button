@@ -1,0 +1,18 @@
+packages:
+  smart_home_button:
+    url: https://github.com/waxling/smart-home-button
+    ref: main
+    files:
+      - path: packages/haos-espbuilder.yaml
+        vars:
+          device_name: m5stack-dialv1
+          friendly_name: M5Stack Dial
+          weather_entity: weather.your_location
+          climate_entity: climate.your_ac
+          music_player_entity: media_player.your_player
+          wifi_ssid: !secret wifi_ssid
+          wifi_password: !secret wifi_password
+          ap_ssid: !secret ap_ssid
+          ap_password: !secret ap_password
+          api_encryption_key: !secret api_encryption_key
+          ota_password: !secret ota_password

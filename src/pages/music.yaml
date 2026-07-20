@@ -7,12 +7,6 @@ substitutions:
   icon_music: "\uF004"
   icon_volume: "\uF005"
 
-external_components:
-  - source: ./components
-    components: [const, image, generic_image, media_source, sendspin]
-    refresh: 0s
-  
-
 font:
   - file:
       family: DM+Sans
@@ -23,7 +17,7 @@ font:
     bpp: 4
     glyphs: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,!?-''_()"'
 
-  - file: ./src/assets/fonts/media_player_icons.ttf
+  - file: ${asset_base_url}src/assets/fonts/media_player_icons.ttf
     id: media_player_icons
     size: 24
     bpp: 4
@@ -48,7 +42,7 @@ color:
     hex: "1A1040"
 
 image:
-  - file: src/assets/images/place_holder.png
+  - file: ${asset_base_url}src/assets/images/place_holder.png
     id: place_holder
     type: RGB565
     transparency: alpha_channel

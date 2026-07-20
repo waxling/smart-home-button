@@ -1,22 +1,38 @@
-substitutions:
-  asset_base_url: ""
-
 packages:
-  external_components: !include src/main/external-components-local.yaml
-  hardware:    !include src/main/hardware.yaml
-  entities:    !include src/main/entities.yaml
-  load_page:   !include src/pages/load.yaml
-  clock_page:  !include src/pages/main.yaml
-  menu_page:   !include src/pages/menu.yaml
-  light_page:  !include src/pages/light.yaml
-  air_page:    !include src/pages/air.yaml
-  music_page:  !include src/pages/music.yaml
-  fridge_page: !include src/pages/fridge.yaml
-  timer_page:  !include src/pages/timer.yaml
+  hardware: !include ../src/main/hardware.yaml
+  entities: !include ../src/main/entities.yaml
+  load_page: !include ../src/pages/load.yaml
+  clock_page: !include ../src/pages/main.yaml
+  menu_page: !include ../src/pages/menu.yaml
+  light_page: !include ../src/pages/light.yaml
+  air_page: !include ../src/pages/air.yaml
+  music_page: !include ../src/pages/music.yaml
+  fridge_page: !include ../src/pages/fridge.yaml
+  timer_page: !include ../src/pages/timer.yaml
+
+substitutions:
+  device_name: m5stack-dialv1
+  friendly_name: M5Stack Dial
+  wifi_ssid: "YOUR_WIFI_SSID"
+  wifi_password: "YOUR_WIFI_PASSWORD"
+  ap_ssid: "Dial Fallback Hotspot"
+  ap_password: "YOUR_FALLBACK_AP_PASSWORD"
+  api_encryption_key: "MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA="
+  ota_password: "change-me-ota-password"
+  asset_base_url: https://raw.githubusercontent.com/waxling/smart-home-button/main/
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/waxling/smart-home-button
+      ref: main
+      path: components
+    components: [const, image, generic_image, media_source, sendspin]
+    refresh: 1d
 
 esphome:
-  name: m5stack-dialv1
-  friendly_name: M5Stack Dial
+  name: ${device_name}
+  friendly_name: ${friendly_name}
   on_boot:
     - priority: 800
       then:
@@ -42,7 +58,7 @@ logger:
 
 api:
   encryption:
-    key: !secret api_encryption_key
+    key: ${api_encryption_key}
   on_client_connected:
     - if:
         condition:
@@ -60,14 +76,14 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  ssid: ${wifi_ssid}
+  password: ${wifi_password}
   ap:
-    ssid: !secret ap_ssid
-    password: !secret ap_password
+    ssid: ${ap_ssid}
+    password: ${ap_password}
 
 captive_portal:
 

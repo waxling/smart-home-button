@@ -109,32 +109,32 @@ font:
     glyphs: "123"
 
 image:
-  - file: src/assets/images/milk.png
+  - file: ${asset_base_url}src/assets/images/milk.png
     id: img_fridge_milk
     type: RGB565
     transparency: alpha_channel
     resize: 20x20
-  - file: src/assets/images/egg.png
+  - file: ${asset_base_url}src/assets/images/egg.png
     id: img_fridge_eggs
     type: RGB565
     transparency: alpha_channel
     resize: 20x20
-  - file: src/assets/images/bread.png
+  - file: ${asset_base_url}src/assets/images/bread.png
     id: img_fridge_bread
     type: RGB565
     transparency: alpha_channel
     resize: 20x20
-  - file: src/assets/images/warning.png
+  - file: ${asset_base_url}src/assets/images/warning.png
     id: img_fridge_warn_icon
     type: RGB565
     transparency: alpha_channel
     resize: 20x20
-  - file: src/assets/images/safe.png
+  - file: ${asset_base_url}src/assets/images/safe.png
     id: img_fridge_safe_icon
     type: RGB565
     transparency: alpha_channel
     resize: 20x20
-  - file: src/assets/images/danger.png
+  - file: ${asset_base_url}src/assets/images/danger.png
     id: img_fridge_exp_icon
     type: RGB565
     transparency: alpha_channel
