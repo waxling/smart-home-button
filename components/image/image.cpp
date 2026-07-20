@@ -109,7 +109,7 @@ lv_img_dsc_t *Image::get_lv_img_dsc() {
   // lazily construct lvgl image_dsc.
   if (this->dsc_.data != this->data_start_) {
     this->dsc_.data = this->data_start_;
-#ifdef LV_COLOR_FORMAT_A1
+#if LVGL_VERSION_MAJOR >= 9
     this->dsc_.header.reserved_2 = 0;
     this->dsc_.header.stride = this->get_width_stride();
     this->dsc_.header.w = this->width_;
