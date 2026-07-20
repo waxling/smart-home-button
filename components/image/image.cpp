@@ -109,6 +109,32 @@ lv_img_dsc_t *Image::get_lv_img_dsc() {
   // lazily construct lvgl image_dsc.
   if (this->dsc_.data != this->data_start_) {
     this->dsc_.data = this->data_start_;
+#ifdef LV_COLOR_FORMAT_A1
+    this->dsc_.header.reserved_2 = 0;
+    this->dsc_.header.stride = this->get_width_stride();
+    this->dsc_.header.w = this->width_;
+    this->dsc_.header.h = this->height_;
+    this->dsc_.data_size = this->get_width_stride() * this->get_height();
+    switch (this->get_type()) {
+      case IMAGE_TYPE_BINARY:
+        this->dsc_.header.cf = LV_COLOR_FORMAT_A1;
+        break;
+
+      case IMAGE_TYPE_GRAYSCALE:
+        this->dsc_.header.cf = LV_COLOR_FORMAT_A8;
+        break;
+
+      case IMAGE_TYPE_RGB:
+        this->dsc_.header.cf =
+            this->transparency_ == TRANSPARENCY_ALPHA_CHANNEL ? LV_COLOR_FORMAT_ARGB8888 : LV_COLOR_FORMAT_RGB888;
+        break;
+
+      case IMAGE_TYPE_RGB565:
+        this->dsc_.header.cf =
+            this->transparency_ == TRANSPARENCY_ALPHA_CHANNEL ? LV_COLOR_FORMAT_RGB565A8 : LV_COLOR_FORMAT_RGB565;
+        break;
+    }
+#else
     this->dsc_.header.always_zero = 0;
     this->dsc_.header.reserved = 0;
     this->dsc_.header.w = this->width_;
@@ -161,6 +187,7 @@ lv_img_dsc_t *Image::get_lv_img_dsc() {
 #endif
         break;
     }
+#endif
   }
   return &this->dsc_;
 }
