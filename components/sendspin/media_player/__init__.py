@@ -2,7 +2,6 @@
 
 import esphome.codegen as cg
 from esphome.components import media_player
-from esphome.components.const import CONF_VOLUME_INCREMENT
 import esphome.config_validation as cv
 from esphome.const import CONF_ID
 
@@ -10,6 +9,8 @@ from .. import CONF_SENDSPIN_ID, SendspinHub, sendspin_ns
 
 CODEOWNERS = ["@kahrendt"]
 DEPENDENCIES = ["sendspin"]
+
+CONF_VOLUME_INCREMENT = "volume_increment"
 
 SendspinMediaPlayer = sendspin_ns.class_(
     "SendspinMediaPlayer",

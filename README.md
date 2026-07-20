@@ -159,7 +159,17 @@ Create a new ESPHome device YAML using `examples/haos-espbuilder.yaml` as the st
 
 The HAOS package is `packages/haos-espbuilder.yaml`. It avoids direct `!secret` lookups so it can be loaded as a remote Git package, and it points `external_components` at this GitHub repository so the SendSpin and media/image components are available during the HAOS build.
 
-For testing changes from a branch or tag, change the package `ref` in your local ESPHome Builder YAML.
+For testing changes from a branch or tag, change both the package `ref` and the `smart_home_button_ref` var in your local ESPHome Builder YAML:
+
+```yaml
+packages:
+  smart_home_button:
+    url: https://github.com/waxling/smart-home-button
+    ref: codex/haos-espbuilder-package
+    file: packages/haos-espbuilder.yaml
+    vars:
+      smart_home_button_ref: codex/haos-espbuilder-package
+```
 
 ## Notes about the music page
 
