@@ -1,5 +1,8 @@
 substitutions:
   asset_base_url: ""
+  time_timezone: Australia/Sydney
+  clock_time_format: "%H:%M"
+  clock_date_format: "%a %d/%m"
 
 packages:
   external_components: !include src/main/external-components-local.yaml

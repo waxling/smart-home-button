@@ -19,3 +19,6 @@ packages:
           ap_password: !secret ap_password
           api_encryption_key: !secret api_encryption_key
           ota_password: !secret ota_password
+          time_timezone: Australia/Sydney
+          clock_time_format: "%H:%M"
+          clock_date_format: "%a %d/%m"
