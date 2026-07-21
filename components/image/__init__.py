@@ -212,7 +212,7 @@ class ImageGrayscale(ImageEncoder):
 
 class ImageRGB565(ImageEncoder):
     def __init__(self, width, height, transparency, dither, invert_alpha):
-        stride = 3 if transparency == CONF_ALPHA_CHANNEL else 2
+        stride = 2
         super().__init__(
             width * stride,
             height,
@@ -221,6 +221,7 @@ class ImageRGB565(ImageEncoder):
             invert_alpha,
         )
         self.big_endian = True
+        self.alpha_index = width * height * 2 if transparency == CONF_ALPHA_CHANNEL else None
 
     def set_big_endian(self, big_endian: bool) -> None:
         self.big_endian = big_endian
@@ -254,8 +255,8 @@ class ImageRGB565(ImageEncoder):
         if self.transparency == CONF_ALPHA_CHANNEL:
             if self.invert_alpha:
                 a ^= 0xFF
-            self.data[self.index] = a
-            self.index += 1
+            self.data[self.alpha_index] = a
+            self.alpha_index += 1
 
 
 class ImageRGB(ImageEncoder):
