@@ -212,7 +212,7 @@ class ImageGrayscale(ImageEncoder):
 
 class ImageRGB565(ImageEncoder):
     def __init__(self, width, height, transparency, dither, invert_alpha):
-        stride = 2
+        stride = 3 if transparency == CONF_ALPHA_CHANNEL else 2
         super().__init__(
             width * stride,
             height,
