@@ -83,7 +83,7 @@ color:
 globals:
   - id: air_temp
     type: int
-    initial_value: '40'   # stored as 2x degrees
+    initial_value: '200'  # stored as target temperature * 10
   - id: in_air
     type: bool
     initial_value: 'false'
@@ -105,31 +105,62 @@ globals:
 
 sensor:
   - platform: homeassistant
-    id: ha_air_target_temp
-    entity_id: ${climate_entity}
-    attribute: temperature
+    id: ha_air_min_temp
+    entity_id: ${thermostat_entity}
+    attribute: ${thermostat_min_temperature_attribute}
     on_value:
-      - lambda: 'id(air_temp) = (int)(x) * 2;'
+      - script.execute: refresh_air
+
+  - platform: homeassistant
+    id: ha_air_max_temp
+    entity_id: ${thermostat_entity}
+    attribute: ${thermostat_max_temperature_attribute}
+    on_value:
+      - script.execute: refresh_air
+
+  - platform: homeassistant
+    id: ha_air_temperature_step
+    entity_id: ${thermostat_entity}
+    attribute: ${thermostat_temperature_step_attribute}
+
+  - platform: homeassistant
+    id: ha_air_target_temp
+    entity_id: ${thermostat_entity}
+    attribute: ${thermostat_target_temperature_attribute}
+    on_value:
+      - lambda: |-
+          if (!isnan(x)) {
+            float min_temp = id(ha_air_min_temp).state;
+            float max_temp = id(ha_air_max_temp).state;
+            if (isnan(min_temp)) min_temp = ${thermostat_min_temperature};
+            if (isnan(max_temp)) max_temp = ${thermostat_max_temperature};
+            int v = (int) roundf(x * 10.0f);
+            const int min_v = (int) roundf(min_temp * 10.0f);
+            const int max_v = (int) roundf(max_temp * 10.0f);
+            if (v < min_v) v = min_v;
+            if (v > max_v) v = max_v;
+            id(air_temp) = v;
+          }
       - script.execute: refresh_air
 
   - platform: homeassistant
     id: ha_air_current_temp
-    entity_id: ${climate_entity}
-    attribute: current_temperature
+    entity_id: ${thermostat_entity}
+    attribute: ${thermostat_current_temperature_attribute}
     on_value:
       - script.execute: refresh_air
 
   - platform: homeassistant
     id: ha_air_humidity
-    entity_id: ${climate_entity}
-    attribute: current_humidity
+    entity_id: ${thermostat_entity}
+    attribute: ${thermostat_current_humidity_attribute}
     on_value:
       - script.execute: refresh_air
 
 text_sensor:
   - platform: homeassistant
     id: ha_air_hvac_mode
-    entity_id: ${climate_entity}
+    entity_id: ${thermostat_entity}
     on_value:
       - lambda: 'id(air_btn_power_active) = (x != "off");'
       - script.execute: refresh_air
@@ -154,27 +185,43 @@ script:
   - id: air_temp_up
     then:
       - lambda: |-
-          int v = id(air_temp) + 2;
-          if (v > 52) v = 52;  // 26C
+          float inc_temp = ${thermostat_temperature_increment};
+          if (inc_temp <= 0.0f) inc_temp = id(ha_air_temperature_step).state;
+          if (isnan(inc_temp) || inc_temp <= 0.0f) inc_temp = ${thermostat_temperature_step};
+          int inc = (int) roundf(inc_temp * 10.0f);
+          if (inc < 1) inc = 1;
+          int v = id(air_temp) + inc;
+          float max_temp = id(ha_air_max_temp).state;
+          if (isnan(max_temp)) max_temp = ${thermostat_max_temperature};
+          const int max_v = (int) roundf(max_temp * 10.0f);
+          if (v > max_v) v = max_v;
           id(air_temp) = v;
       - homeassistant.service:
           service: climate.set_temperature
           data:
-            entity_id: ${climate_entity}
-            temperature: !lambda 'return std::to_string((int)(id(air_temp) / 2));'
+            entity_id: ${thermostat_entity}
+            temperature: !lambda 'return std::to_string(id(air_temp) / 10.0f);'
       - script.execute: refresh_air
 
   - id: air_temp_down
     then:
       - lambda: |-
-          int v = id(air_temp) - 2;
-          if (v < 34) v = 34;  // 17C
+          float inc_temp = ${thermostat_temperature_increment};
+          if (inc_temp <= 0.0f) inc_temp = id(ha_air_temperature_step).state;
+          if (isnan(inc_temp) || inc_temp <= 0.0f) inc_temp = ${thermostat_temperature_step};
+          int inc = (int) roundf(inc_temp * 10.0f);
+          if (inc < 1) inc = 1;
+          int v = id(air_temp) - inc;
+          float min_temp = id(ha_air_min_temp).state;
+          if (isnan(min_temp)) min_temp = ${thermostat_min_temperature};
+          const int min_v = (int) roundf(min_temp * 10.0f);
+          if (v < min_v) v = min_v;
           id(air_temp) = v;
       - homeassistant.service:
           service: climate.set_temperature
           data:
-            entity_id: ${climate_entity}
-            temperature: !lambda 'return std::to_string((int)(id(air_temp) / 2));'
+            entity_id: ${thermostat_entity}
+            temperature: !lambda 'return std::to_string(id(air_temp) / 10.0f);'
       - script.execute: refresh_air
 
   - id: air_toggle_mode
@@ -203,25 +250,34 @@ script:
   - id: refresh_air
     then:
       - lambda: |-
-          int t = id(air_temp);
+          float min_temp = id(ha_air_min_temp).state;
+          float max_temp = id(ha_air_max_temp).state;
+          if (isnan(min_temp)) min_temp = ${thermostat_min_temperature};
+          if (isnan(max_temp)) max_temp = ${thermostat_max_temperature};
+          const int min_v = (int) roundf(min_temp * 10.0f);
+          const int max_v = (int) roundf(max_temp * 10.0f);
+          if (id(air_temp) < min_v) id(air_temp) = min_v;
+          if (id(air_temp) > max_v) id(air_temp) = max_v;
+          const float target = id(air_temp) / 10.0f;
           static char tbuf[10];
-          if (t % 2 == 0) {
-            snprintf(tbuf, sizeof(tbuf), "%d", t / 2);
+          if (fabsf(target - roundf(target)) < 0.05f) {
+            snprintf(tbuf, sizeof(tbuf), "%.0f", target);
           } else {
-            snprintf(tbuf, sizeof(tbuf), "%d.5", t / 2);
+            snprintf(tbuf, sizeof(tbuf), "%.1f", target);
           }
           lv_label_set_text(id(lbl_air_temp), tbuf);
 
           float ct = id(ha_air_current_temp).state;
           float hm = id(ha_air_humidity).state;
-          if (isnan(ct)) ct = (float)(t / 2);
+          if (isnan(ct)) ct = target;
           if (isnan(hm)) hm = 60.0f;
 
           static char sbuf[40];
           snprintf(sbuf, sizeof(sbuf), "Temp %.0f\xc2\xb0  Humid %.0f%%", ct, hm);
           lv_label_set_text(id(lbl_air_info), sbuf);
 
-          lv_arc_set_value(id(air_set_arc), t);
+          lv_arc_set_range(id(air_set_arc), min_v, max_v);
+          lv_arc_set_value(id(air_set_arc), id(air_temp));
 
           lv_img_set_src(id(img_air_fan_btn), id(air_mode) == 1 ? id(img_air_fan_on) : id(img_air_fan_off));
           lv_img_set_src(id(img_air_power_btn), id(air_btn_power_active) ? id(img_air_power_on) : id(img_air_power_off));
@@ -501,7 +557,7 @@ lvgl:
                     - homeassistant.service:
                         service: climate.set_hvac_mode
                         data:
-                          entity_id: ${climate_entity}
+                          entity_id: ${thermostat_entity}
                           hvac_mode: !lambda 'return id(air_btn_power_active) ? std::string("auto") : std::string("off");'
                     - script.execute: refresh_air
                   widgets:

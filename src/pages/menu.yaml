@@ -372,7 +372,7 @@ script:
           };
           const int OFFSETS[5] = {-2, -1, 0, 1, 2};
 
-          const char* TITLES[6]    = {"Timer", "Fridge", "Lights", "AC", "Music", "Home"};
+          const char* TITLES[6]    = {"Timer", "Fridge", "Lights", "Thermostat", "Music", "Home"};
           const char* SUBTITLES[6] = {"Living Rm - Auto", "Living Rm - Off",
                                       "Living Rm - 75%",  "Living Rm - 24C",
                                       "Living Rm - Off",  "Back to Main"};
@@ -384,12 +384,12 @@ script:
             id(menu_img_music)->get_lv_img_dsc(),
             id(menu_img_home)->get_lv_img_dsc()
           };
-          // Per-item accent colors: Timer, Fridge, Lights, AC, Music, Home
+          // Per-item accent colors: Timer, Fridge, Lights, Thermostat, Music, Home
           const uint32_t ACCENT_COLORS[6] = {
             0xFB923C,  // Timer   - orange
             0x4ADE80,  // Fridge  - green
             0xFDC003,  // Lights  - yellow
-            0x5ABBFD,  // AC      - ice blue
+            0x5ABBFD,  // Thermostat - ice blue
             0xA792E8,  // Music   - purple
             0x576BFE   // Home    - blue
           };
@@ -398,7 +398,7 @@ script:
             0x2A1200,  // Timer
             0x0A2A14,  // Fridge
             0x2A1E00,  // Lights
-            0x001A2A,  // AC
+            0x001A2A,  // Thermostat
             0x150A2A,  // Music
             0x0D1537   // Home
           };
@@ -685,7 +685,7 @@ lvgl:
                               x: 38
                               text_font: font_menu_item
                               text_color: col_menu_dim
-                              text: "AC"
+                              text: "Thermostat"
                               text_opa: 50%
 
                     - obj:

@@ -26,7 +26,7 @@ The project is based on ESPHome and LVGL. Most of the UI is split into separate 
 - Show time, date, and weather data from Home Assistant.
 - Navigate with the rotary encoder, touch gestures, and the front button.
 - Control the built-in LED ring with brightness, color, and preset color flows.
-- Adjust an air conditioner entity from Home Assistant.
+- Adjust a thermostat/climate entity from Home Assistant.
 - Show a music page with playback buttons, volume, progress, and album art.
 - Run a simple countdown timer.
 - Show a small fridge/food status page.
@@ -36,8 +36,8 @@ The project is based on ESPHome and LVGL. Most of the UI is split into separate 
 
 | | | | |
 | --- | --- | --- | --- |
-| <img src="docs/images/gallery/music-page.jpg" alt="Music page" width="240"> | <img src="docs/images/gallery/clock-weather-page.jpg" alt="Clock and weather page" width="240"> | <img src="docs/images/gallery/ac-page.jpg" alt="AC page" width="240"> | <img src="docs/images/gallery/timer-page.jpg" alt="Timer page" width="240"> |
-| <img src="docs/images/gallery/ac-power-page.jpg" alt="AC power control page" width="240"> | <img src="docs/images/gallery/light-page.jpg" alt="Light page" width="240"> | <img src="docs/images/gallery/fridge-page.jpg" alt="Fridge page" width="240"> | <img src="docs/images/gallery/menu-page.jpg" alt="Menu page" width="240"> |
+| <img src="docs/images/gallery/music-page.jpg" alt="Music page" width="240"> | <img src="docs/images/gallery/clock-weather-page.jpg" alt="Clock and weather page" width="240"> | <img src="docs/images/gallery/ac-page.jpg" alt="Thermostat page" width="240"> | <img src="docs/images/gallery/timer-page.jpg" alt="Timer page" width="240"> |
+| <img src="docs/images/gallery/ac-power-page.jpg" alt="Thermostat power control page" width="240"> | <img src="docs/images/gallery/light-page.jpg" alt="Light page" width="240"> | <img src="docs/images/gallery/fridge-page.jpg" alt="Fridge page" width="240"> | <img src="docs/images/gallery/menu-page.jpg" alt="Menu page" width="240"> |
 
 ## Pages
 
@@ -46,7 +46,7 @@ The project is based on ESPHome and LVGL. Most of the UI is split into separate 
 | Clock | Time, date, weather, humidity, AQI, pressure, and wind speed |
 | Menu | Circular page navigation for the small round screen |
 | Light | LED ring brightness, color, and effects |
-| AC | Target temperature and power control; fan/swing UI can be mapped to your own climate services |
+| Thermostat | Target temperature and power control; fan/swing UI can be mapped to your own climate services |
 | Music | SendSpin media state, cover art, progress, volume, and transport controls |
 | Fridge | Small food freshness/status cards |
 | Timer | Countdown timer with rotary adjustment |
@@ -129,7 +129,7 @@ Edit `src/main/entities.yaml`:
 ```yaml
 substitutions:
   weather_entity: weather.your_location
-  climate_entity: climate.your_ac
+  thermostat_entity: climate.your_ac
   music_player_entity: media_player.your_player
 ```
 
@@ -184,6 +184,24 @@ home_wind_format: "%.0fkm/h"
 
 If your weather integration exposes one of these values only as an attribute, create a Home Assistant template/helper sensor for it and point the dial at that sensor entity.
 
+The thermostat page reads and controls a Home Assistant `climate` entity. The dial uses the selected entity's target, min, max, and step attributes when they are exposed by Home Assistant. The numeric values below are fallbacks for climate integrations that omit an attribute or expose it under a different name:
+
+```yaml
+thermostat_entity: climate.living_room
+thermostat_target_temperature_attribute: temperature
+thermostat_current_temperature_attribute: current_temperature
+thermostat_current_humidity_attribute: current_humidity
+thermostat_min_temperature_attribute: min_temp
+thermostat_max_temperature_attribute: max_temp
+thermostat_temperature_step_attribute: target_temp_step
+thermostat_min_temperature: "17.0"
+thermostat_max_temperature: "26.0"
+thermostat_temperature_step: "0.5"
+thermostat_temperature_increment: "0.0"
+```
+
+Leave `thermostat_temperature_increment` as `0.0` to use the climate entity's step size. Set it to a positive value only if you want the rotary encoder to move in a different increment.
+
 For testing changes from a branch or tag, change both the package `ref` and the `smart_home_button_ref` var in your local ESPHome Builder YAML:
 
 ```yaml
@@ -207,9 +225,9 @@ Album art is intentionally kept small because the M5Dial does not have PSRAM. If
 
 If volume control does not work, first check the Home Assistant media player entity. Some players expose playback state but do not expose writable volume control. If you want a HA-only music page, replace the SendSpin command scripts with standard `media_player` services.
 
-## Notes about AC controls
+## Notes about thermostat controls
 
-Climate entities are not all the same. Temperature and power are wired to Home Assistant services in this project. Fan speed and swing are shown as UI controls, but you may need to map them to `climate.set_fan_mode`, `climate.set_swing_mode`, or your own scripts depending on your air conditioner integration.
+Climate entities are not all the same. Temperature and power are wired to Home Assistant services in this project. Fan speed and swing are shown as UI controls, but you may need to map them to `climate.set_fan_mode`, `climate.set_swing_mode`, or your own scripts depending on your thermostat/climate integration.
 
 ## Notes about battery power
 
@@ -219,7 +237,7 @@ M5Dial V1.1 needs the hold pin to stay enabled when running from battery. This p
 
 - **Device is unavailable in Home Assistant**: make sure the `api` section is enabled and port `6053` is reachable.
 - **Wrong weather values**: change `weather_entity` in `src/main/entities.yaml`.
-- **Wrong AC entity**: change `climate_entity` in `src/main/entities.yaml`.
+- **Wrong thermostat entity**: change `thermostat_entity` in `src/main/entities.yaml`.
 - **Music page shows unavailable**: choose the real player entity, not the Dial entity itself.
 - **Album art causes reboot**: keep the artwork small and do not increase LVGL memory use too much.
 - **First build cannot download fonts**: connect to the internet once so ESPHome can fetch Google Fonts, or replace `gfonts://` fonts with local font files.

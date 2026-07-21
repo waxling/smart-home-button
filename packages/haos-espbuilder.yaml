@@ -32,6 +32,17 @@ substitutions:
   home_pressure_format: "%.0fhPa"
   home_wind_entity: sensor.your_wind_speed
   home_wind_format: "%.0fkm/h"
+  thermostat_entity: climate.your_ac
+  thermostat_target_temperature_attribute: temperature
+  thermostat_current_temperature_attribute: current_temperature
+  thermostat_current_humidity_attribute: current_humidity
+  thermostat_min_temperature_attribute: min_temp
+  thermostat_max_temperature_attribute: max_temp
+  thermostat_temperature_step_attribute: target_temp_step
+  thermostat_min_temperature: "17.0"
+  thermostat_max_temperature: "26.0"
+  thermostat_temperature_step: "0.5"
+  thermostat_temperature_increment: "0.0"
   smart_home_button_ref: main
   smart_home_button_refresh: 1d
   asset_base_url: https://raw.githubusercontent.com/waxling/smart-home-button/${smart_home_button_ref}/
