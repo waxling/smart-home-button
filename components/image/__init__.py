@@ -220,7 +220,7 @@ class ImageRGB565(ImageEncoder):
             dither,
             invert_alpha,
         )
-        self.big_endian = True
+        self.big_endian = False
         self.alpha_index = width * height * 2 if transparency == CONF_ALPHA_CHANNEL else None
 
     def set_big_endian(self, big_endian: bool) -> None:

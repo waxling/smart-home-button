@@ -134,6 +134,9 @@ lv_img_dsc_t *Image::get_lv_image_dsc() {
       case IMAGE_TYPE_RGB565:
         this->dsc_.header.cf =
             this->transparency_ == TRANSPARENCY_ALPHA_CHANNEL ? LV_COLOR_FORMAT_RGB565A8 : LV_COLOR_FORMAT_RGB565;
+        if (this->transparency_ == TRANSPARENCY_ALPHA_CHANNEL) {
+          this->dsc_.data_size = this->get_width_stride() * this->get_height() + this->width_ * this->height_;
+        }
         break;
     }
 #else
@@ -222,7 +225,7 @@ Color Image::get_rgb_pixel_(int x, int y) const {
 }
 Color Image::get_rgb565_pixel_(int x, int y) const {
   const uint8_t *pos = this->data_start_ + (x + y * this->width_) * this->bpp_ / 8;
-  uint16_t rgb565 = encode_uint16(progmem_read_byte(pos), progmem_read_byte(pos + 1));
+  uint16_t rgb565 = encode_uint16(progmem_read_byte(pos + 1), progmem_read_byte(pos));
   auto r = (rgb565 & 0xF800) >> 11;
   auto g = (rgb565 & 0x07E0) >> 5;
   auto b = rgb565 & 0x001F;
