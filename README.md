@@ -167,6 +167,23 @@ clock_time_format: "%H:%M"
 clock_date_format: "%a %d/%m"
 ```
 
+The home page metric slots read numeric Home Assistant sensor states. Set these vars to the entities you want shown on the dial:
+
+```yaml
+home_temperature_entity: sensor.living_room_temperature
+home_temperature_format: "%.0f°"
+home_humidity_entity: sensor.living_room_humidity
+home_humidity_format: "%.0f%%"
+home_aqi_entity: sensor.air_quality_index
+home_aqi_format: "%.0f"
+home_pressure_entity: sensor.outdoor_pressure
+home_pressure_format: "%.0fhPa"
+home_wind_entity: sensor.wind_speed
+home_wind_format: "%.0fkm/h"
+```
+
+If your weather integration exposes one of these values only as an attribute, create a Home Assistant template/helper sensor for it and point the dial at that sensor entity.
+
 For testing changes from a branch or tag, change both the package `ref` and the `smart_home_button_ref` var in your local ESPHome Builder YAML:
 
 ```yaml

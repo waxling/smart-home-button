@@ -1,5 +1,15 @@
 substitutions:
   # Change these to match your Home Assistant instance before flashing.
   weather_entity: weather.your_location
+  home_temperature_entity: sensor.your_temperature
+  home_temperature_format: "%.0f°"
+  home_humidity_entity: sensor.your_humidity
+  home_humidity_format: "%.0f%%"
+  home_aqi_entity: sensor.your_aqi
+  home_aqi_format: "%.0f"
+  home_pressure_entity: sensor.your_pressure
+  home_pressure_format: "%.0fhPa"
+  home_wind_entity: sensor.your_wind_speed
+  home_wind_format: "%.0fkm/h"
   climate_entity: climate.your_ac
   music_player_entity: media_player.your_player

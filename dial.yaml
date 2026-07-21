@@ -3,6 +3,16 @@ substitutions:
   time_timezone: Australia/Sydney
   clock_time_format: "%H:%M"
   clock_date_format: "%a %d/%m"
+  home_temperature_entity: sensor.your_temperature
+  home_temperature_format: "%.0f°"
+  home_humidity_entity: sensor.your_humidity
+  home_humidity_format: "%.0f%%"
+  home_aqi_entity: sensor.your_aqi
+  home_aqi_format: "%.0f"
+  home_pressure_entity: sensor.your_pressure
+  home_pressure_format: "%.0fhPa"
+  home_wind_entity: sensor.your_wind_speed
+  home_wind_format: "%.0fkm/h"
 
 packages:
   external_components: !include src/main/external-components-local.yaml
