@@ -13,6 +13,20 @@ substitutions:
   home_pressure_format: "%.0fhPa"
   home_wind_entity: sensor.your_wind_speed
   home_wind_format: "%.0fkm/h"
+  light_entity: light.your_light
+  light_page_title: LIGHT
+  light_menu_subtitle: "Living Rm - 75%"
+  light_rgb_action: script.set_light_rgb
+  light_effect_1: "__disabled__"
+  light_effect_2: "__disabled__"
+  light_effect_3: "__disabled__"
+  light_effect_4: "__disabled__"
+  light_effect_5: "__disabled__"
+  light_effect_6: "__disabled__"
+  menu_timer_subtitle: "Living Rm - Auto"
+  menu_fridge_subtitle: "Living Rm - Off"
+  thermostat_menu_subtitle: "Living Rm - 24C"
+  menu_music_subtitle: "Living Rm - Off"
   thermostat_entity: climate.your_ac
   thermostat_target_temperature_attribute: temperature
   thermostat_current_temperature_attribute: current_temperature

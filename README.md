@@ -128,8 +128,8 @@ Edit `src/main/entities.yaml`:
 
 ```yaml
 substitutions:
-  weather_entity: weather.your_location
   thermostat_entity: climate.your_ac
+  light_entity: light.your_light
   music_player_entity: media_player.your_player
 ```
 
@@ -201,6 +201,33 @@ thermostat_temperature_increment: "0.0"
 ```
 
 Leave `thermostat_temperature_increment` as `0.0` to use the climate entity's step size. Set it to a positive value only if you want the rotary encoder to move in a different increment.
+
+The lights page controls a Home Assistant light entity. The bulb button toggles the light, the brightness arc sends `brightness_pct`, the palette button calls a Home Assistant script/action for RGB colour, and the gradient button can cycle configured Home Assistant light effects:
+
+```yaml
+light_entity: light.living_room
+light_page_title: LIGHT
+light_menu_subtitle: "Living Rm - 75%"
+light_rgb_action: script.set_light_rgb
+light_effect_1: "__disabled__"
+light_effect_2: "__disabled__"
+light_effect_3: "__disabled__"
+light_effect_4: "__disabled__"
+light_effect_5: "__disabled__"
+light_effect_6: "__disabled__"
+```
+
+Leave an effect set to `__disabled__` when your light does not support effects or you do not want that slot to call Home Assistant.
+
+The menu subtitles are also substitutions so the UI does not have to say `Living Rm`:
+
+```yaml
+menu_timer_subtitle: "Timer"
+menu_fridge_subtitle: "Fridge"
+light_menu_subtitle: "Living Room - 75%"
+thermostat_menu_subtitle: "Living Room - 24C"
+menu_music_subtitle: "Music"
+```
 
 For testing changes from a branch or tag, change both the package `ref` and the `smart_home_button_ref` var in your local ESPHome Builder YAML:
 

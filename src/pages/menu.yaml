@@ -373,9 +373,9 @@ script:
           const int OFFSETS[5] = {-2, -1, 0, 1, 2};
 
           const char* TITLES[6]    = {"Timer", "Fridge", "Lights", "Thermostat", "Music", "Home"};
-          const char* SUBTITLES[6] = {"Living Rm - Auto", "Living Rm - Off",
-                                      "Living Rm - 75%",  "Living Rm - 24C",
-                                      "Living Rm - Off",  "Back to Main"};
+          const char* SUBTITLES[6] = {"${menu_timer_subtitle}", "${menu_fridge_subtitle}",
+                                      "${light_menu_subtitle}", "${thermostat_menu_subtitle}",
+                                      "${menu_music_subtitle}", "Back to Main"};
           const lv_img_dsc_t* IMGS[6] = {
             id(menu_img_timer)->get_lv_img_dsc(),
             id(menu_img_fridge)->get_lv_img_dsc(),
