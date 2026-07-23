@@ -222,18 +222,18 @@ Leave an effect set to `__disabled__` when your light does not support effects o
 The menu subtitles are also substitutions so the UI does not have to use room-specific wording:
 
 ```yaml
-menu_timer_title: Timer
-menu_timer_subtitle: "Timer"
-menu_fridge_title: Fridge
-menu_fridge_subtitle: "Fridge"
+timer_menu_title: Timer
+timer_menu_subtitle: "Timer"
+fridge_menu_title: Fridge
+fridge_menu_subtitle: "Fridge"
 light_menu_title: Lights
 light_menu_subtitle: "75%"
 thermostat_menu_title: Thermostat
 thermostat_menu_subtitle: "24C"
-menu_music_title: Music
-menu_music_subtitle: "Music"
-menu_home_title: Home
-menu_home_subtitle: "Back to Main"
+music_menu_title: Music
+music_menu_subtitle: "Music"
+home_menu_title: Home
+home_menu_subtitle: "Back to Main"
 ```
 
 `*_title` values are the primary menu labels. `*_subtitle` values are the smaller status/context labels shown under the selected menu item.

@@ -14,12 +14,12 @@ substitutions:
   climate_entity: climate.your_ac
   light_entity: light.your_light
   light_page_title: LIGHT
-  menu_timer_title: Timer
-  menu_fridge_title: Fridge
+  timer_menu_title: Timer
+  fridge_menu_title: Fridge
   light_menu_title: Lights
   thermostat_menu_title: Thermostat
-  menu_music_title: Music
-  menu_home_title: Home
+  music_menu_title: Music
+  home_menu_title: Home
   light_menu_subtitle: "75%"
   light_rgb_action: script.set_light_rgb
   light_effect_1: "__disabled__"
@@ -28,11 +28,11 @@ substitutions:
   light_effect_4: "__disabled__"
   light_effect_5: "__disabled__"
   light_effect_6: "__disabled__"
-  menu_timer_subtitle: "Auto"
-  menu_fridge_subtitle: "Off"
+  timer_menu_subtitle: "Auto"
+  fridge_menu_subtitle: "Off"
   thermostat_menu_subtitle: "24C"
-  menu_music_subtitle: "Off"
-  menu_home_subtitle: "Back to Main"
+  music_menu_subtitle: "Off"
+  home_menu_subtitle: "Back to Main"
   thermostat_entity: climate.your_ac
   thermostat_target_temperature_attribute: temperature
   thermostat_current_temperature_attribute: current_temperature

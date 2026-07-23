@@ -372,11 +372,11 @@ script:
           };
           const int OFFSETS[5] = {-2, -1, 0, 1, 2};
 
-          const char* TITLES[6]    = {"${menu_timer_title}", "${menu_fridge_title}", "${light_menu_title}",
-                                      "${thermostat_menu_title}", "${menu_music_title}", "${menu_home_title}"};
-          const char* SUBTITLES[6] = {"${menu_timer_subtitle}", "${menu_fridge_subtitle}",
+          const char* TITLES[6]    = {"${timer_menu_title}", "${fridge_menu_title}", "${light_menu_title}",
+                                      "${thermostat_menu_title}", "${music_menu_title}", "${home_menu_title}"};
+          const char* SUBTITLES[6] = {"${timer_menu_subtitle}", "${fridge_menu_subtitle}",
                                       "${light_menu_subtitle}", "${thermostat_menu_subtitle}",
-                                      "${menu_music_subtitle}", "${menu_home_subtitle}"};
+                                      "${music_menu_subtitle}", "${home_menu_subtitle}"};
           const lv_img_dsc_t* IMGS[6] = {
             id(menu_img_timer)->get_lv_img_dsc(),
             id(menu_img_fridge)->get_lv_img_dsc(),
@@ -582,7 +582,7 @@ lvgl:
                               x: 38
                               text_font: font_menu_item
                               text_color: col_menu_dim
-                              text: "${menu_timer_title}"
+                              text: "${timer_menu_title}"
                               text_opa: 25%
 
                     - obj:
@@ -608,7 +608,7 @@ lvgl:
                               x: 38
                               text_font: font_menu_item
                               text_color: col_menu_dim
-                              text: "${menu_fridge_title}"
+                              text: "${fridge_menu_title}"
                               text_opa: 50%
 
                     - obj:
@@ -712,7 +712,7 @@ lvgl:
                               x: 38
                               text_font: font_menu_item
                               text_color: col_menu_dim
-                              text: "${menu_music_title}"
+                              text: "${music_menu_title}"
                               text_opa: 25%
 
               - obj:
