@@ -14,6 +14,7 @@ substitutions:
   home_wind_entity: sensor.your_wind_speed
   home_wind_format: "%.0fkm/h"
   light_entity: light.your_light
+  light_brightness_attribute: brightness
   light_page_title: LIGHT
   timer_menu_title: Timer
   fridge_menu_title: Fridge

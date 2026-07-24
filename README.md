@@ -206,6 +206,7 @@ The lights page controls a Home Assistant light entity. The bulb button toggles 
 
 ```yaml
 light_entity: light.living_room
+light_brightness_attribute: brightness
 light_page_title: LIGHT
 light_menu_subtitle: "75%"
 light_rgb_action: script.set_light_rgb
