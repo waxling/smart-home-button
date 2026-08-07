@@ -17,7 +17,7 @@ Edit `src/main/entities.yaml` and replace the placeholders:
 ```yaml
 substitutions:
   weather_entity: weather.your_location
-  climate_entity: climate.your_ac
+  thermostat_entity: climate.your_ac
   music_player_entity: media_player.your_player
 ```
 
@@ -37,6 +37,13 @@ Choose the entity that actually plays audio, not the Dial entity itself. A good 
 
 If the entity is `unavailable`, Home Assistant will disable controls and the Dial cannot sync it.
 
-## 4. Timezone
+## 4. Timezone and Formatting
 
-The default timezone is `Asia/Shanghai`. Change it in `src/pages/main.yaml` if you use another timezone.
+Timezone, clock format, and date format are substitutions:
+
+```yaml
+substitutions:
+  time_timezone: Australia/Sydney
+  clock_time_format: "%H:%M"
+  clock_date_format: "%a %d/%m"
+```

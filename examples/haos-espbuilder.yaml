@@ -1,0 +1,66 @@
+packages:
+  smart_home_button:
+    url: https://github.com/waxling/smart-home-button
+    ref: main
+    refresh: 1d
+    files:
+      - path: packages/haos-espbuilder.yaml
+        vars:
+          smart_home_button_ref: main
+          smart_home_button_refresh: 1d
+          device_name: m5stack-dialv1
+          friendly_name: M5Stack Dial
+          weather_entity: weather.your_location
+          music_player_entity: media_player.your_player
+          wifi_ssid: !secret wifi_ssid
+          wifi_password: !secret wifi_password
+          ap_ssid: !secret ap_ssid
+          ap_password: !secret ap_password
+          api_encryption_key: !secret api_encryption_key
+          ota_password: !secret ota_password
+          time_timezone: Australia/Sydney
+          clock_time_format: "%H:%M"
+          clock_date_format: "%a %d/%m"
+          home_temperature_entity: sensor.your_temperature
+          home_temperature_format: "%.0f°"
+          home_humidity_entity: sensor.your_humidity
+          home_humidity_format: "%.0f%%"
+          home_aqi_entity: sensor.your_aqi
+          home_aqi_format: "%.0f"
+          home_pressure_entity: sensor.your_pressure
+          home_pressure_format: "%.0fhPa"
+          home_wind_entity: sensor.your_wind_speed
+          home_wind_format: "%.0fkm/h"
+          light_entity: light.your_light
+          light_brightness_attribute: brightness
+          light_page_title: LIGHT
+          timer_menu_title: Timer
+          fridge_menu_title: Fridge
+          light_menu_title: Lights
+          thermostat_menu_title: Thermostat
+          music_menu_title: Music
+          home_menu_title: Home
+          light_menu_subtitle: "75%"
+          light_rgb_action: script.set_light_rgb
+          light_effect_1: "__disabled__"
+          light_effect_2: "__disabled__"
+          light_effect_3: "__disabled__"
+          light_effect_4: "__disabled__"
+          light_effect_5: "__disabled__"
+          light_effect_6: "__disabled__"
+          timer_menu_subtitle: "Auto"
+          fridge_menu_subtitle: "Off"
+          thermostat_menu_subtitle: "24C"
+          music_menu_subtitle: "Off"
+          home_menu_subtitle: "Back to Main"
+          thermostat_entity: climate.your_ac
+          thermostat_target_temperature_attribute: temperature
+          thermostat_current_temperature_attribute: current_temperature
+          thermostat_current_humidity_attribute: current_humidity
+          thermostat_min_temperature_attribute: min_temp
+          thermostat_max_temperature_attribute: max_temp
+          thermostat_temperature_step_attribute: target_temp_step
+          thermostat_min_temperature: "17.0"
+          thermostat_max_temperature: "26.0"
+          thermostat_temperature_step: "0.5"
+          thermostat_temperature_increment: "0.0"

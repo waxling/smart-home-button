@@ -1,17 +1,17 @@
 image:
-  - file: "src/assets/images/palette.png"
+  - file: "${asset_base_url}src/assets/images/palette.png"
     id: light_img_palette
     type: RGB565
     transparency: alpha_channel
     resize: 22x22
 
-  - file: src/assets/images/light.png
+  - file: ${asset_base_url}src/assets/images/light.png
     id: light_img_dengguang
     type: RGB565
     transparency: alpha_channel
     resize: 20x20
 
-  - file: src/assets/images/gradient.png
+  - file: ${asset_base_url}src/assets/images/gradient.png
     id: light_img_gradient
     type: RGB565
     transparency: alpha_channel
@@ -103,6 +103,33 @@ globals:
     type: int
     initial_value: '-1'
 
+sensor:
+  - platform: homeassistant
+    id: ha_light_brightness
+    entity_id: ${light_entity}
+    attribute: ${light_brightness_attribute}
+    on_value:
+      - lambda: |-
+          if (!isnan(x)) {
+            int pct = (int) roundf((x * 100.0f) / 255.0f);
+            if (pct < 0) pct = 0;
+            if (pct > 100) pct = 100;
+            id(light_brightness) = pct;
+          }
+      - script.execute: refresh_light_arc
+
+text_sensor:
+  - platform: homeassistant
+    id: ha_light_state
+    entity_id: ${light_entity}
+    on_value:
+      - lambda: |-
+          id(light_on) = (x == "on");
+          if (x == "off" || x == "unavailable" || x == "unknown") {
+            id(light_on) = false;
+          }
+      - script.execute: refresh_light_arc
+
 script:
   - id: open_light
     then:
@@ -132,14 +159,16 @@ script:
           condition:
             lambda: 'return id(light_on);'
           then:
-            - light.turn_on:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
-                red: !lambda "return id(light_color_r) / 255.0f;"
-                green: !lambda "return id(light_color_g) / 255.0f;"
-                blue: !lambda "return id(light_color_b) / 255.0f;"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
           else:
-            - light.turn_off: led_strip
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: ${light_entity}
 
   - id: open_colorpicker
     then:
@@ -189,11 +218,14 @@ script:
           condition:
             lambda: 'return id(light_on);'
           then:
-            - light.control:
-                id: led_strip
-                red: !lambda "return id(light_color_r) / 255.0f;"
-                green: !lambda "return id(light_color_g) / 255.0f;"
-                blue: !lambda "return id(light_color_b) / 255.0f;"
+            - homeassistant.service:
+                service: ${light_rgb_action}
+                data:
+                  light_name: ${light_entity}
+                  red: !lambda "return std::to_string(id(light_color_r));"
+                  green: !lambda "return std::to_string(id(light_color_g));"
+                  blue: !lambda "return std::to_string(id(light_color_b));"
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
       - lvgl.page.show:
           id: page_light
           animation: MOVE_RIGHT
@@ -260,9 +292,11 @@ script:
           condition:
             lambda: 'return id(light_on);'
           then:
-            - light.control:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
 
   - id: light_brightness_down
     then:
@@ -275,9 +309,11 @@ script:
           condition:
             lambda: 'return id(light_on);'
           then:
-            - light.control:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
 
   - id: refresh_light_arc
     then:
@@ -329,52 +365,64 @@ script:
       - script.execute: refresh_light_arc
       - if:
           condition:
-            lambda: 'return id(light_gradient_mode) == 0;'
+            lambda: 'return id(light_gradient_mode) == 0 && std::string("${light_effect_1}") != "__disabled__";'
           then:
-            - light.turn_on:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
-                effect: "Atmosphere Flow Aurora"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
+                  effect: ${light_effect_1}
       - if:
           condition:
-            lambda: 'return id(light_gradient_mode) == 1;'
+            lambda: 'return id(light_gradient_mode) == 1 && std::string("${light_effect_2}") != "__disabled__";'
           then:
-            - light.turn_on:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
-                effect: "Atmosphere Flow Sunset"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
+                  effect: ${light_effect_2}
       - if:
           condition:
-            lambda: 'return id(light_gradient_mode) == 2;'
+            lambda: 'return id(light_gradient_mode) == 2 && std::string("${light_effect_3}") != "__disabled__";'
           then:
-            - light.turn_on:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
-                effect: "Atmosphere Flow Ocean"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
+                  effect: ${light_effect_3}
       - if:
           condition:
-            lambda: 'return id(light_gradient_mode) == 3;'
+            lambda: 'return id(light_gradient_mode) == 3 && std::string("${light_effect_4}") != "__disabled__";'
           then:
-            - light.turn_on:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
-                effect: "Atmosphere Flow Neon"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
+                  effect: ${light_effect_4}
       - if:
           condition:
-            lambda: 'return id(light_gradient_mode) == 4;'
+            lambda: 'return id(light_gradient_mode) == 4 && std::string("${light_effect_5}") != "__disabled__";'
           then:
-            - light.turn_on:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
-                effect: "Atmosphere Flow Forest"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
+                  effect: ${light_effect_5}
       - if:
           condition:
-            lambda: 'return id(light_gradient_mode) == 5;'
+            lambda: 'return id(light_gradient_mode) == 5 && std::string("${light_effect_6}") != "__disabled__";'
           then:
-            - light.turn_on:
-                id: led_strip
-                brightness: !lambda "return id(light_brightness) / 100.0f;"
-                effect: "Atmosphere Flow Ice"
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: ${light_entity}
+                  brightness_pct: !lambda "return std::to_string(id(light_brightness));"
+                  effect: ${light_effect_6}
 
 lvgl:
   pages:
@@ -474,7 +522,7 @@ lvgl:
                     - label:
                         id: lbl_light_title
                         align: CENTER
-                        text: "LIGHT"
+                        text: "${light_page_title}"
                         text_font: font_light_label
                         text_color: col_light_label_text
 

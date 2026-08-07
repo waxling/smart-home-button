@@ -1,5 +1,24 @@
+packages:
+  hardware: !include ../src/main/hardware.yaml
+  entities: !include ../src/main/entities.yaml
+  load_page: !include ../src/pages/load.yaml
+  clock_page: !include ../src/pages/main.yaml
+  menu_page: !include ../src/pages/menu.yaml
+  light_page: !include ../src/pages/light.yaml
+  air_page: !include ../src/pages/air.yaml
+  music_page: !include ../src/pages/music.yaml
+  fridge_page: !include ../src/pages/fridge.yaml
+  timer_page: !include ../src/pages/timer.yaml
+
 substitutions:
-  asset_base_url: ""
+  device_name: m5stack-dialv1
+  friendly_name: M5Stack Dial
+  wifi_ssid: "YOUR_WIFI_SSID"
+  wifi_password: "YOUR_WIFI_PASSWORD"
+  ap_ssid: "Dial Fallback Hotspot"
+  ap_password: "YOUR_FALLBACK_AP_PASSWORD"
+  api_encryption_key: "MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA="
+  ota_password: "change-me-ota-password"
   time_timezone: Australia/Sydney
   clock_time_format: "%H:%M"
   clock_date_format: "%a %d/%m"
@@ -50,23 +69,22 @@ substitutions:
   screen_off_timeout: 60s
   screen_dim_brightness: 20%
   screen_wake_brightness: 100%
+  smart_home_button_ref: main
+  smart_home_button_refresh: 1d
+  asset_base_url: https://raw.githubusercontent.com/waxling/smart-home-button/${smart_home_button_ref}/
 
-packages:
-  external_components: !include src/main/external-components-local.yaml
-  hardware:    !include src/main/hardware.yaml
-  entities:    !include src/main/entities.yaml
-  load_page:   !include src/pages/load.yaml
-  clock_page:  !include src/pages/main.yaml
-  menu_page:   !include src/pages/menu.yaml
-  light_page:  !include src/pages/light.yaml
-  air_page:    !include src/pages/air.yaml
-  music_page:  !include src/pages/music.yaml
-  fridge_page: !include src/pages/fridge.yaml
-  timer_page:  !include src/pages/timer.yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/waxling/smart-home-button
+      ref: ${smart_home_button_ref}
+      path: components
+    components: [image, generic_image, media_source, sendspin]
+    refresh: ${smart_home_button_refresh}
 
 esphome:
-  name: m5stack-dialv1
-  friendly_name: M5Stack Dial
+  name: ${device_name}
+  friendly_name: ${friendly_name}
   on_boot:
     - priority: 800
       then:
@@ -92,7 +110,7 @@ logger:
 
 api:
   encryption:
-    key: !secret api_encryption_key
+    key: ${api_encryption_key}
   on_client_connected:
     - if:
         condition:
@@ -110,14 +128,14 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  ssid: ${wifi_ssid}
+  password: ${wifi_password}
   ap:
-    ssid: !secret ap_ssid
-    password: !secret ap_password
+    ssid: ${ap_ssid}
+    password: ${ap_password}
 
 captive_portal:
 

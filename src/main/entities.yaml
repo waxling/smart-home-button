@@ -1,5 +1,48 @@
 substitutions:
   # Change these to match your Home Assistant instance before flashing.
   weather_entity: weather.your_location
+  home_temperature_entity: sensor.your_temperature
+  home_temperature_format: "%.0f°"
+  home_humidity_entity: sensor.your_humidity
+  home_humidity_format: "%.0f%%"
+  home_aqi_entity: sensor.your_aqi
+  home_aqi_format: "%.0f"
+  home_pressure_entity: sensor.your_pressure
+  home_pressure_format: "%.0fhPa"
+  home_wind_entity: sensor.your_wind_speed
+  home_wind_format: "%.0fkm/h"
   climate_entity: climate.your_ac
+  light_entity: light.your_light
+  light_brightness_attribute: brightness
+  light_page_title: LIGHT
+  timer_menu_title: Timer
+  fridge_menu_title: Fridge
+  light_menu_title: Lights
+  thermostat_menu_title: Thermostat
+  music_menu_title: Music
+  home_menu_title: Home
+  light_menu_subtitle: "75%"
+  light_rgb_action: script.set_light_rgb
+  light_effect_1: "__disabled__"
+  light_effect_2: "__disabled__"
+  light_effect_3: "__disabled__"
+  light_effect_4: "__disabled__"
+  light_effect_5: "__disabled__"
+  light_effect_6: "__disabled__"
+  timer_menu_subtitle: "Auto"
+  fridge_menu_subtitle: "Off"
+  thermostat_menu_subtitle: "24C"
+  music_menu_subtitle: "Off"
+  home_menu_subtitle: "Back to Main"
+  thermostat_entity: climate.your_ac
+  thermostat_target_temperature_attribute: temperature
+  thermostat_current_temperature_attribute: current_temperature
+  thermostat_current_humidity_attribute: current_humidity
+  thermostat_min_temperature_attribute: min_temp
+  thermostat_max_temperature_attribute: max_temp
+  thermostat_temperature_step_attribute: target_temp_step
+  thermostat_min_temperature: "17.0"
+  thermostat_max_temperature: "26.0"
+  thermostat_temperature_step: "0.5"
+  thermostat_temperature_increment: "0.0"
   music_player_entity: media_player.your_player

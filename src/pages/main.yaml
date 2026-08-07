@@ -4,13 +4,13 @@ font:
     id: font_clock
     size: 60
     bpp: 4
-    glyphs: "0123456789: "
+    glyphs: "0123456789: AMPamp"
 
   - file: "gfonts://DM+Sans"
     id: font_date
     size: 14
     bpp: 4
-    glyphs: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 /.-"
+    glyphs: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 /.-,"
 
   - file: "gfonts://DM+Sans"
     id: font_val
@@ -69,7 +69,7 @@ time:
     id: rtctime
     i2c_id: internal_i2c
     address: 0x51
-    timezone: Asia/Shanghai
+    timezone: ${time_timezone}
     update_interval: never
     on_time:
       - seconds: 0
@@ -80,16 +80,14 @@ time:
               text: !lambda |-
                 static char buf[6];
                 auto t = id(rtctime).now();
-                sprintf(buf, "%02d:%02d", t.hour, t.minute);
+                t.strftime(buf, sizeof(buf), "${clock_time_format}");
                 return buf;
           - lvgl.label.update:
               id: lbl_date
               text: !lambda |-
-                static char buf[20];
+                static char buf[32];
                 auto t = id(rtctime).now();
-                const char* days[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-                const char* day = (t.day_of_week >= 1 && t.day_of_week <= 7) ? days[t.day_of_week - 1] : "---";
-                sprintf(buf, "%s  %02d/%02d", day, t.month, t.day_of_month);
+                t.strftime(buf, sizeof(buf), "${clock_date_format}");
                 return buf;
           - lvgl.arc.update:
               id: arc_minute
@@ -97,7 +95,7 @@ time:
 
   - platform: homeassistant
     id: esptime
-    timezone: Asia/Shanghai
+    timezone: ${time_timezone}
     on_time_sync:
       then:
         - pcf8563.write_time:
@@ -237,72 +235,67 @@ sensor:
 
   - platform: homeassistant
     id: ha_temperature
-    entity_id: ${weather_entity}
-    attribute: temperature
+    entity_id: ${home_temperature_entity}
     internal: true
     on_value:
       then:
         - lvgl.label.update:
             id: lbl_temp
             text: !lambda |-
-              static char buf[8];
-              sprintf(buf, "%.0f\xc2\xb0", x);
+              static char buf[16];
+              sprintf(buf, "${home_temperature_format}", x);
               return buf;
 
   - platform: homeassistant
     id: ha_humidity
-    entity_id: ${weather_entity}
-    attribute: humidity
+    entity_id: ${home_humidity_entity}
     internal: true
     on_value:
       then:
         - lvgl.label.update:
             id: lbl_humidity
             text: !lambda |-
-              static char buf[8];
-              sprintf(buf, "%.0f%%", x);
+              static char buf[16];
+              sprintf(buf, "${home_humidity_format}", x);
               return buf;
 
   - platform: homeassistant
     id: ha_aqi
-    entity_id: ${weather_entity}
-    attribute: aqi
+    entity_id: ${home_aqi_entity}
     internal: true
     on_value:
       then:
         - lvgl.label.update:
             id: lbl_uv
             text: !lambda |-
-              static char buf[8];
-              sprintf(buf, "%.0f", x);
+              static char buf[16];
+              sprintf(buf, "${home_aqi_format}", x);
               return buf;
 
   - platform: homeassistant
     id: ha_pressure
-    entity_id: ${weather_entity}
-    attribute: pressure
+    entity_id: ${home_pressure_entity}
     internal: true
     on_value:
       then:
         - lvgl.label.update:
             id: lbl_pressure
             text: !lambda |-
-              static char buf[12];
-              sprintf(buf, "%.0fhPa", x);
+              static char buf[16];
+              sprintf(buf, "${home_pressure_format}", x);
               return buf;
 
   - platform: homeassistant
     id: ha_wind
-    entity_id: ${weather_entity}
-    attribute: wind_speed
+    entity_id: ${home_wind_entity}
     internal: true
     on_value:
       then:
         - lvgl.label.update:
             id: lbl_cloud
             text: !lambda |-
-              static char buf[12];
-              sprintf(buf, "%.0fkm/h", x);
+              static char buf[16];
+              sprintf(buf, "${home_wind_format}", x);
               return buf;
 
 binary_sensor:

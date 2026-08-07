@@ -12,7 +12,6 @@ from PIL import Image, UnidentifiedImageError
 
 from esphome import core, external_files
 import esphome.codegen as cg
-from esphome.components.const import CONF_BYTE_ORDER
 import esphome.config_validation as cv
 from esphome.const import (
     CONF_DEFAULTS,
@@ -52,6 +51,7 @@ CONF_CHROMA_KEY = "chroma_key"
 CONF_ALPHA_CHANNEL = "alpha_channel"
 CONF_INVERT_ALPHA = "invert_alpha"
 CONF_IMAGES = "images"
+CONF_BYTE_ORDER = "byte_order"
 KEY_METADATA = "metadata"
 
 TRANSPARENCY_TYPES = (
@@ -220,7 +220,8 @@ class ImageRGB565(ImageEncoder):
             dither,
             invert_alpha,
         )
-        self.big_endian = True
+        self.big_endian = False
+        self.alpha_index = width * height * 2 if transparency == CONF_ALPHA_CHANNEL else None
 
     def set_big_endian(self, big_endian: bool) -> None:
         self.big_endian = big_endian
@@ -254,8 +255,8 @@ class ImageRGB565(ImageEncoder):
         if self.transparency == CONF_ALPHA_CHANNEL:
             if self.invert_alpha:
                 a ^= 0xFF
-            self.data[self.index] = a
-            self.index += 1
+            self.data[self.alpha_index] = a
+            self.alpha_index += 1
 
 
 class ImageRGB(ImageEncoder):

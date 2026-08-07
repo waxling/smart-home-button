@@ -1,0 +1,4 @@
+external_components:
+  - source: ./components
+    components: [image, generic_image, media_source, sendspin]
+    refresh: 0s

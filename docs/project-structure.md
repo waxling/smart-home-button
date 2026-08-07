@@ -7,6 +7,7 @@
 - `requirements.txt`: pinned ESPHome version for reproducible builds.
 - `README.md`: community-facing overview and setup guide.
 - `THIRD_PARTY_NOTICES.md`: notes for copied components, fonts, icons, and dependencies.
+- `packages/haos-espbuilder.yaml`: remote package entry point for HAOS ESPHome Builder.
 
 ## Source layout
 
@@ -16,6 +17,7 @@
 - `src/assets/fonts/`: local fonts.
 - `src/assets/images/`: small embedded image assets.
 - `components/`: local ESPHome external components.
+- `examples/haos-espbuilder.yaml`: copyable HAOS ESPHome Builder device YAML.
 
 ## ID conventions
 
