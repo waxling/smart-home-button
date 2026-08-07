@@ -80,6 +80,26 @@ globals:
   - id: swipe_cur_y
     type: int
     initial_value: '0'
+  - id: screen_wake_consumed
+    type: bool
+    initial_value: 'false'
+  - id: screen_dimmed
+    type: bool
+    initial_value: 'false'
+
+script:
+  - id: wake_screen
+    mode: restart
+    then:
+      - if:
+          condition: lvgl.is_paused
+          then:
+            - lvgl.resume:
+            - lvgl.widget.redraw:
+      - light.turn_on:
+          id: display_backlight
+          brightness: ${screen_wake_brightness}
+      - globals.set: {id: screen_dimmed, value: 'false'}
 
 touchscreen:
   - platform: ft5x06
@@ -96,7 +116,18 @@ touchscreen:
           id(swipe_cur_x) = touch.x;
           id(swipe_cur_y) = touch.y;
     on_release:
+      - if:
+          condition:
+            lambda: 'return id(screen_dimmed);'
+          then:
+            - globals.set: {id: screen_wake_consumed, value: 'true'}
+            - script.execute: wake_screen
       - lambda: |-
+          if (id(screen_wake_consumed)) {
+            id(screen_wake_consumed) = false;
+            id(swipe_start_x) = -1;
+            return;
+          }
           int dx = id(swipe_cur_x) - id(swipe_start_x);
           int dy = id(swipe_cur_y) - id(swipe_start_y);
           id(swipe_start_x) = -1;

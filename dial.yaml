@@ -46,6 +46,10 @@ substitutions:
   thermostat_max_temperature: "26.0"
   thermostat_temperature_step: "0.5"
   thermostat_temperature_increment: "0.0"
+  screen_dim_timeout: 30s
+  screen_off_timeout: 60s
+  screen_dim_brightness: 20%
+  screen_wake_brightness: 100%
 
 packages:
   external_components: !include src/main/external-components-local.yaml
@@ -182,5 +186,18 @@ lvgl:
       enter_button: front_button
   buffer_size: "12%"
   color_depth: 16
+  resume_on_input: false
   bg_color: col_bg
   default_font: font_lbl
+  on_idle:
+    - timeout: ${screen_dim_timeout}
+      then:
+        - globals.set: {id: screen_dimmed, value: 'true'}
+        - light.turn_on:
+            id: display_backlight
+            brightness: ${screen_dim_brightness}
+    - timeout: ${screen_off_timeout}
+      then:
+        - globals.set: {id: screen_dimmed, value: 'true'}
+        - light.turn_off: display_backlight
+        - lvgl.pause:
